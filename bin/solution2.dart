@@ -147,6 +147,7 @@ class Point {
     return '[$x, $y] +[$dx, $dy])';
   }
 
+  /// two points are equal if they are at the same location
   @override
   bool operator ==(Object other) {
     return other is Point && x == other.x && y == other.y;
