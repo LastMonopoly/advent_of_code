@@ -5,6 +5,47 @@ import 'dart:io';
 
 void main() => solve(getInput(fromFile: true));
 
+void solve(List<String> input) {
+  Map<String, int> point = {
+    '': 0,
+    ')': 3,
+    ']': 57,
+    '}': 1197,
+    '>': 25137,
+  };
+
+  int sum = 0;
+  for (String line in input) {
+    if (line.isNotEmpty) {
+      sum += point[getIllegalChar(line)]!;
+    }
+  }
+  print(sum);
+}
+
+String getIllegalChar(String line) {
+  Map<String, String> chunk = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+    '<': '>',
+  };
+
+  List<String> stack = [];
+  for (int i = 0; i < line.length; i++) {
+    String char = line[i];
+
+    if (chunk.containsKey(char)) {
+      stack.add(char);
+    } else if (char == chunk[stack.last]) {
+      stack.removeLast();
+    } else {
+      return char;
+    }
+  }
+  return '';
+}
+
 List<String> getInput({required bool fromFile}) {
   if (fromFile) {
     return File('./assets/input1.txt').readAsLinesSync();
@@ -23,45 +64,4 @@ List<String> getInput({required bool fromFile}) {
 """
         .split('\n');
   }
-}
-
-void solve(List<String> input) {
-  Map<String, int> point = {
-    '': 0,
-    ')': 3,
-    ']': 57,
-    '}': 1197,
-    '>': 25137,
-  };
-
-  int points = 0;
-  for (String line in input) {
-    if (line.isNotEmpty) {
-      points += point[getIllegalChar(line)]!;
-    }
-  }
-  print(points);
-}
-
-String getIllegalChar(String line) {
-  Map<String, String> chunk = {
-    '(': ')',
-    '[': ']',
-    '{': '}',
-    '<': '>',
-  };
-  List<String> stack = [];
-
-  for (int i = 0; i < line.length; i++) {
-    String char = line[i];
-
-    if (chunk.containsKey(char)) {
-      stack.add(char);
-    } else if (chunk[stack.last] == line[i]) {
-      stack.removeLast();
-    } else {
-      return char;
-    }
-  }
-  return '';
 }

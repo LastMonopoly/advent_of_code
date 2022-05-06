@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import '../bin/solution1.dart';
+import '../bin/solution_2021day10.dart';
 
 void main() {
   group('Catch illegal character: all legal', () {
