@@ -47,11 +47,35 @@ position=<-3,  6> velocity=< 2, -1>
 }
 
 void solve(List<String> input) {
+  List<Point> points = [];
   for (String line in input) {
     if (line.isNotEmpty) {
-      print(line);
-      print(Point.from(line));
+      points.add(Point.from(line));
     }
+  }
+
+  List<Point> area = Point.computeArea(points);
+  Point topLeft = area[0];
+  Point bottomRight = area[1];
+  print(area);
+
+  int step = 1;
+  for (int second = 0; second < 5; second += step) {
+    for (Point point in points) {
+      point.move(step);
+    }
+    for (int y = topLeft.y; y <= bottomRight.y; y++) {
+      List<String> line = [];
+      for (int x = topLeft.x; x <= bottomRight.x; x++) {
+        if (points.contains(Point(x, y, 0, 0))) {
+          line.add('#');
+        } else {
+          line.add('.');
+        }
+      }
+      print(line.join(''));
+    }
+    print('');
   }
 }
 
@@ -59,6 +83,32 @@ class Point {
   int x, y, dx, dy;
 
   Point(this.x, this.y, this.dx, this.dy);
+
+  static void printOut(List<Point> points) {
+    for (Point p in points) {
+      print(p);
+    }
+  }
+
+  static List<Point> computeArea(List<Point> points) {
+    int minX, minY, maxX, maxY;
+    minX = points[0].x;
+    minY = points[0].y;
+    maxX = points[0].x;
+    maxY = points[0].y;
+
+    for (Point point in points) {
+      if (point.x < minX) minX = point.x;
+      if (point.x > maxX) maxX = point.x;
+      if (point.y < minY) minY = point.y;
+      if (point.y > maxY) maxY = point.y;
+    }
+
+    return [
+      Point(minX, minY, 0, 0),
+      Point(maxX, maxY, 0, 0),
+    ];
+  }
 
   static Point from(String line) {
     assert(line.isNotEmpty);
@@ -82,8 +132,21 @@ class Point {
     return Point(x, y, dx, dy);
   }
 
+  void move(int step) {
+    x += dx * step;
+    y += dy * step;
+  }
+
   @override
   String toString() {
-    return 'p($x, $y) v($dx, $dy)';
+    return '[$x, $y] +[$dx, $dy])';
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Point && x == other.x && y == other.y;
+  }
+
+  @override
+  int get hashCode => x * x + y * y;
 }
