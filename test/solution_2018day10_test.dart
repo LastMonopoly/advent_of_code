@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import '../bin/solution2.dart';
+import '../bin/solution_2018day10.dart';
 
 void main() {
   group('Converts string to point', () {

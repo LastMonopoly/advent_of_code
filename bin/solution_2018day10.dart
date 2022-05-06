@@ -5,47 +5,6 @@ import 'dart:io';
 
 void main() => solve(getInput(fromFile: true));
 
-List<String> getInput({required bool fromFile}) {
-  if (fromFile) {
-    return File('./assets/input2.txt').readAsLinesSync();
-  } else {
-    return """
-position=< 9,  1> velocity=< 0,  2>
-position=< 7,  0> velocity=<-1,  0>
-position=< 3, -2> velocity=<-1,  1>
-position=< 6, 10> velocity=<-2, -1>
-position=< 2, -4> velocity=< 2,  2>
-position=<-6, 10> velocity=< 2, -2>
-position=< 1,  8> velocity=< 1, -1>
-position=< 1,  7> velocity=< 1,  0>
-position=<-3, 11> velocity=< 1, -2>
-position=< 7,  6> velocity=<-1, -1>
-position=<-2,  3> velocity=< 1,  0>
-position=<-4,  3> velocity=< 2,  0>
-position=<10, -3> velocity=<-1,  1>
-position=< 5, 11> velocity=< 1, -2>
-position=< 4,  7> velocity=< 0, -1>
-position=< 8, -2> velocity=< 0,  1>
-position=<15,  0> velocity=<-2,  0>
-position=< 1,  6> velocity=< 1,  0>
-position=< 8,  9> velocity=< 0, -1>
-position=< 3,  3> velocity=<-1,  1>
-position=< 0,  5> velocity=< 0, -1>
-position=<-2,  2> velocity=< 2,  0>
-position=< 5, -2> velocity=< 1,  2>
-position=< 1,  4> velocity=< 2,  1>
-position=<-2,  7> velocity=< 2, -2>
-position=< 3,  6> velocity=<-1, -1>
-position=< 5,  0> velocity=< 1,  0>
-position=<-6,  0> velocity=< 2,  0>
-position=< 5,  9> velocity=< 1, -2>
-position=<14,  7> velocity=<-2,  0>
-position=<-3,  6> velocity=< 2, -1>
-"""
-        .split('\n');
-  }
-}
-
 void solve(List<String> input) {
   List<Point> points = [];
 
@@ -57,7 +16,7 @@ void solve(List<String> input) {
 
   late List<Point> area;
 
-  // Find out when the area size is the smallest during the first 100,000 seconds
+  // Find out when the area size is the smallest within the first 100,000 seconds
   int? minAreaSize;
   int? minAreaTime;
   for (int t = 0; t < 100000; t += 1) {
@@ -65,17 +24,18 @@ void solve(List<String> input) {
     Point topLeft = area[0];
     Point bottomRight = area[1];
 
-    int sizeX = bottomRight.x - topLeft.x;
-    int sizeY = bottomRight.y - topLeft.y;
-    int size = sizeX * sizeY;
+    int width = bottomRight.x - topLeft.x;
+    int height = bottomRight.y - topLeft.y;
+    int size = width * height;
+
     minAreaSize ??= size;
     minAreaTime ??= t;
-
     if (size < minAreaSize) {
       minAreaSize = size;
       minAreaTime = t;
       // print('Seconds: $t, $sizeX x $sizeY, $size');
     }
+
     move(points, 1);
   }
 
@@ -86,7 +46,7 @@ void solve(List<String> input) {
       points.add(Point.parse(line));
     }
   }
-  // this time, print out the image when time is close to minAreaTime
+  // This time, print the image when time is close to minAreaTime
   int t = minAreaTime!;
   move(points, t - 1);
   area = computeArea(points);
@@ -125,9 +85,7 @@ move(List<Point> points, int seconds) {
   }
 }
 
-/// compute the area that covers all the points
-///
-/// returns top left point and bottom right point
+/// Returns the area that can cover all the points.
 List<Point> computeArea(List<Point> points) {
   int minX, minY, maxX, maxY;
   minX = points[0].x;
@@ -188,4 +146,45 @@ class Point {
 
   @override
   int get hashCode => x * x + y * y;
+}
+
+List<String> getInput({required bool fromFile}) {
+  if (fromFile) {
+    return File('./assets/input2.txt').readAsLinesSync();
+  } else {
+    return """
+position=< 9,  1> velocity=< 0,  2>
+position=< 7,  0> velocity=<-1,  0>
+position=< 3, -2> velocity=<-1,  1>
+position=< 6, 10> velocity=<-2, -1>
+position=< 2, -4> velocity=< 2,  2>
+position=<-6, 10> velocity=< 2, -2>
+position=< 1,  8> velocity=< 1, -1>
+position=< 1,  7> velocity=< 1,  0>
+position=<-3, 11> velocity=< 1, -2>
+position=< 7,  6> velocity=<-1, -1>
+position=<-2,  3> velocity=< 1,  0>
+position=<-4,  3> velocity=< 2,  0>
+position=<10, -3> velocity=<-1,  1>
+position=< 5, 11> velocity=< 1, -2>
+position=< 4,  7> velocity=< 0, -1>
+position=< 8, -2> velocity=< 0,  1>
+position=<15,  0> velocity=<-2,  0>
+position=< 1,  6> velocity=< 1,  0>
+position=< 8,  9> velocity=< 0, -1>
+position=< 3,  3> velocity=<-1,  1>
+position=< 0,  5> velocity=< 0, -1>
+position=<-2,  2> velocity=< 2,  0>
+position=< 5, -2> velocity=< 1,  2>
+position=< 1,  4> velocity=< 2,  1>
+position=<-2,  7> velocity=< 2, -2>
+position=< 3,  6> velocity=<-1, -1>
+position=< 5,  0> velocity=< 1,  0>
+position=<-6,  0> velocity=< 2,  0>
+position=< 5,  9> velocity=< 1, -2>
+position=<14,  7> velocity=<-2,  0>
+position=<-3,  6> velocity=< 2, -1>
+"""
+        .split('\n');
+  }
 }
