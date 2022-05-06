@@ -48,35 +48,71 @@ position=<-3,  6> velocity=< 2, -1>
 
 void solve(List<String> input) {
   List<Point> points = [];
+
   for (String line in input) {
     if (line.isNotEmpty) {
-      points.add(Point.from(line));
+      points.add(Point.parse(line));
     }
   }
 
-  List<Point> area = Point.computeArea(points);
+  List<Point> area = computeArea(points);
   Point topLeft = area[0];
   Point bottomRight = area[1];
-  print(area);
 
-  int step = 1;
-  for (int second = 0; second < 5; second += step) {
-    for (Point point in points) {
-      point.move(step);
-    }
-    for (int y = topLeft.y; y <= bottomRight.y; y++) {
-      List<String> line = [];
-      for (int x = topLeft.x; x <= bottomRight.x; x++) {
-        if (points.contains(Point(x, y, 0, 0))) {
-          line.add('#');
-        } else {
-          line.add('.');
-        }
-      }
-      print(line.join(''));
-    }
+  int seconds = 1;
+  for (int times = 0; times < 5; times += seconds) {
+    move(points, seconds);
+
+    print(computeImage(points, topLeft, bottomRight).join('\n'));
     print('');
   }
+}
+
+List<String> computeImage(
+    List<Point> points, Point topLeft, Point bottomRight) {
+  List<String> lines = [];
+  for (int y = topLeft.y; y <= bottomRight.y; y++) {
+    List<String> line = [];
+    for (int x = topLeft.x; x <= bottomRight.x; x++) {
+      if (points.contains(Point(x, y, 0, 0))) {
+        line.add('#');
+      } else {
+        line.add('.');
+      }
+    }
+    lines.add(line.join(''));
+  }
+  return lines;
+}
+
+move(List<Point> points, int seconds) {
+  for (Point point in points) {
+    point.x += seconds * point.dx;
+    point.y += seconds * point.dy;
+  }
+}
+
+/// compute the area that covers all the points
+///
+/// returns top left point and bottom right point
+List<Point> computeArea(List<Point> points) {
+  int minX, minY, maxX, maxY;
+  minX = points[0].x;
+  minY = points[0].y;
+  maxX = points[0].x;
+  maxY = points[0].y;
+
+  for (Point point in points) {
+    if (point.x < minX) minX = point.x;
+    if (point.x > maxX) maxX = point.x;
+    if (point.y < minY) minY = point.y;
+    if (point.y > maxY) maxY = point.y;
+  }
+
+  return [
+    Point(minX, minY, 0, 0),
+    Point(maxX, maxY, 0, 0),
+  ];
 }
 
 class Point {
@@ -84,33 +120,7 @@ class Point {
 
   Point(this.x, this.y, this.dx, this.dy);
 
-  static void printOut(List<Point> points) {
-    for (Point p in points) {
-      print(p);
-    }
-  }
-
-  static List<Point> computeArea(List<Point> points) {
-    int minX, minY, maxX, maxY;
-    minX = points[0].x;
-    minY = points[0].y;
-    maxX = points[0].x;
-    maxY = points[0].y;
-
-    for (Point point in points) {
-      if (point.x < minX) minX = point.x;
-      if (point.x > maxX) maxX = point.x;
-      if (point.y < minY) minY = point.y;
-      if (point.y > maxY) maxY = point.y;
-    }
-
-    return [
-      Point(minX, minY, 0, 0),
-      Point(maxX, maxY, 0, 0),
-    ];
-  }
-
-  static Point from(String line) {
+  static Point parse(String line) {
     assert(line.isNotEmpty);
 
     int x, y, dx, dy;
@@ -130,11 +140,6 @@ class Point {
     dy = int.parse(line.substring(l + 1, r));
 
     return Point(x, y, dx, dy);
-  }
-
-  void move(int step) {
-    x += dx * step;
-    y += dy * step;
   }
 
   @override
