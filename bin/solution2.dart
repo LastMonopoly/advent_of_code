@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-void main() => solve(getInput(fromFile: false));
+void main() => solve(getInput(fromFile: true));
 
 List<String> getInput({required bool fromFile}) {
   if (fromFile) {
@@ -55,17 +55,43 @@ void solve(List<String> input) {
     }
   }
 
+  // Find out when the area size is the smallest during the first 100,000 seconds
+
+  int? minAreaSize;
+  int? minAreaTime;
+  for (int t = 0; t < 100000; t += 1) {
+    List<Point> area = computeArea(points);
+    Point topLeft = area[0];
+    Point bottomRight = area[1];
+
+    int sizeX = bottomRight.x - topLeft.x;
+    int sizeY = bottomRight.y - topLeft.y;
+    int size = sizeX * sizeY;
+    minAreaSize ??= size;
+    minAreaTime ??= t;
+
+    if (size < minAreaSize) {
+      minAreaSize = size;
+      minAreaTime = t;
+      // print('Seconds: $t, $sizeX x $sizeY, $size');
+    }
+    move(points, 1);
+  }
+
+  // Restart the simulation
+  points = [];
+  for (String line in input) {
+    if (line.isNotEmpty) {
+      points.add(Point.parse(line));
+    }
+  }
+  // this time, print out the image when close to minAreaTime
+  int t = minAreaTime!;
+  move(points, t);
   List<Point> area = computeArea(points);
   Point topLeft = area[0];
   Point bottomRight = area[1];
-
-  int seconds = 1;
-  for (int times = 0; times < 5; times += seconds) {
-    move(points, seconds);
-
-    print(computeImage(points, topLeft, bottomRight).join('\n'));
-    print('');
-  }
+  print(computeImage(points, topLeft, bottomRight).join('\n'));
 }
 
 List<String> computeImage(
