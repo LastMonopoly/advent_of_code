@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-void main() => solve(getInput(fromFile: false));
+void main() => solve(getInput(fromFile: true));
 
 List<String> getInput({required bool fromFile}) {
   if (fromFile) {
@@ -26,10 +26,19 @@ List<String> getInput({required bool fromFile}) {
 }
 
 void solve(List<String> input) {
+  Map<String, int> point = {
+    '': 0,
+    ')': 3,
+    ']': 57,
+    '}': 1197,
+    '>': 25137,
+  };
+
+  int points = 0;
   for (String line in input) {
-    print(line);
-    print(getIllegalChar(line));
+    points += point[getIllegalChar(line)]!;
   }
+  print(points);
 }
 
 String getIllegalChar(String line) {
