@@ -36,7 +36,9 @@ void solve(List<String> input) {
 
   int points = 0;
   for (String line in input) {
-    points += point[getIllegalChar(line)]!;
+    if (line.isNotEmpty) {
+      points += point[getIllegalChar(line)]!;
+    }
   }
   print(points);
 }
