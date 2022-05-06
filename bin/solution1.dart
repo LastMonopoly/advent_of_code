@@ -3,8 +3,6 @@
 
 import 'dart:io';
 
-bool pass() => true;
-
 void main() => solve(getInput(fromFile: false));
 
 List<String> getInput({required bool fromFile}) {
@@ -30,5 +28,29 @@ List<String> getInput({required bool fromFile}) {
 void solve(List<String> input) {
   for (String line in input) {
     print(line);
+    print(getIllegalChar(line));
   }
+}
+
+String getIllegalChar(String line) {
+  Map<String, String> chunk = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+    '<': '>',
+  };
+  List<String> stack = [];
+
+  for (int i = 0; i < line.length; i++) {
+    String char = line[i];
+
+    if (chunk.containsKey(char)) {
+      stack.add(char);
+    } else if (chunk[stack.last] == line[i]) {
+      stack.removeLast();
+    } else {
+      return char;
+    }
+  }
+  return '';
 }
