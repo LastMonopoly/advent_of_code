@@ -55,12 +55,13 @@ void solve(List<String> input) {
     }
   }
 
-  // Find out when the area size is the smallest during the first 100,000 seconds
+  late List<Point> area;
 
+  // Find out when the area size is the smallest during the first 100,000 seconds
   int? minAreaSize;
   int? minAreaTime;
   for (int t = 0; t < 100000; t += 1) {
-    List<Point> area = computeArea(points);
+    area = computeArea(points);
     Point topLeft = area[0];
     Point bottomRight = area[1];
 
@@ -85,13 +86,19 @@ void solve(List<String> input) {
       points.add(Point.parse(line));
     }
   }
-  // this time, print out the image when close to minAreaTime
+  // this time, print out the image when time is close to minAreaTime
   int t = minAreaTime!;
-  move(points, t);
-  List<Point> area = computeArea(points);
-  Point topLeft = area[0];
-  Point bottomRight = area[1];
-  print(computeImage(points, topLeft, bottomRight).join('\n'));
+  move(points, t - 1);
+  area = computeArea(points);
+  print(computeImage(points, area[0], area[1]).join('\n'));
+  print('');
+  move(points, 1);
+  area = computeArea(points);
+  print(computeImage(points, area[0], area[1]).join('\n'));
+  print('');
+  move(points, 1);
+  area = computeArea(points);
+  print(computeImage(points, area[0], area[1]).join('\n'));
 }
 
 List<String> computeImage(
