@@ -4,9 +4,60 @@
 
 import 'dart:io';
 
-void main() => solve(getInput(fromFile: true));
+void main() => solveSecondHalf(getInput(fromFile: true));
 
-void solve(List<String> input) {
+void solveSecondHalf(List<String> input) {
+  List<int> scores = [];
+  List<String> completions = [];
+  for (String line in input) {
+    if (line.isNotEmpty) {
+      completions = autoComplete(line);
+      if (completions.isNotEmpty) scores.add(scoreAutoCompletion(completions));
+    }
+  }
+  scores.sort();
+  print(scores[scores.length ~/ 2]);
+}
+
+int scoreAutoCompletion(List<String> completion) {
+  Map<String, int> point = {
+    ')': 1,
+    ']': 2,
+    '}': 3,
+    '>': 4,
+  };
+
+  int sum = 0;
+  for (String char in completion) {
+    sum *= 5;
+    sum += point[char]!;
+  }
+  return sum;
+}
+
+List<String> autoComplete(String line) {
+  List<String> stack = [];
+  for (int i = 0; i < line.length; i++) {
+    String char = line[i];
+
+    if (chunk.containsKey(char)) {
+      stack.add(char);
+    } else if (char == chunk[stack.last]) {
+      stack.removeLast();
+    } else {
+      return [];
+    }
+  }
+
+  List<String> completion = [];
+  while (stack.isNotEmpty) {
+    completion.add(chunk[stack.removeLast()]!);
+  }
+
+  return completion;
+}
+
+void solveFirstHalf(List<String> input) {
   Map<String, int> point = {
     '': 0,
     ')': 3,
@@ -25,13 +76,6 @@ void solve(List<String> input) {
 }
 
 String getIllegalChar(String line) {
-  Map<String, String> chunk = {
-    '(': ')',
-    '[': ']',
-    '{': '}',
-    '<': '>',
-  };
-
   List<String> stack = [];
   for (int i = 0; i < line.length; i++) {
     String char = line[i];
@@ -46,6 +90,13 @@ String getIllegalChar(String line) {
   }
   return '';
 }
+
+Map<String, String> chunk = const {
+  '(': ')',
+  '[': ']',
+  '{': '}',
+  '<': '>',
+};
 
 List<String> getInput({required bool fromFile}) {
   if (fromFile) {
