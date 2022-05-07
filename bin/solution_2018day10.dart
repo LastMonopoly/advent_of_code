@@ -48,18 +48,17 @@ void solve(List<String> input) {
     }
   }
   // This time, print the image when time is close to minAreaTime
-  int t = minAreaTime!;
-  move(points, t - 1);
-  area = computeArea(points);
-  print(computeImage(points, area[0], area[1]).join('\n'));
-  print('');
-  move(points, 1);
-  area = computeArea(points);
-  print(computeImage(points, area[0], area[1]).join('\n'));
-  print('');
-  move(points, 1);
-  area = computeArea(points);
-  print(computeImage(points, area[0], area[1]).join('\n'));
+  int numOfPrints = 3;
+  int t = minAreaTime! - (numOfPrints - 1) ~/ 2;
+  move(points, t);
+
+  for (int i = 0; i < numOfPrints; i++) {
+    area = computeArea(points);
+    print('After ${t + i} seconds:');
+    print(computeImage(points, area[0], area[1]).join('\n'));
+    print('');
+    move(points, 1);
+  }
 }
 
 List<String> computeImage(
