@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+// Copyright 2022 LastMonopoly@outlook.com. All rights reserved.
 // Solution for https://adventofcode.com/2018/day/10
 
 import 'dart:io';
