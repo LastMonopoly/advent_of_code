@@ -7,23 +7,13 @@ import 'dart:io';
 void main() => solve(getInput(fromFile: true));
 
 void solve(List<String> input) {
-  List<Point> points = [];
-
-  for (String line in input) {
-    if (line.isNotEmpty) {
-      points.add(Point.parse(line));
-    }
-  }
-
-  late List<Point> area;
+  List<Point> points = parsePoints(input);
 
   // Find out when the area size is the smallest within the first 100,000 seconds
-  int? minAreaSize;
-  int? minAreaTime;
+  int? minAreaSize, minAreaTime;
   for (int t = 0; t < 100000; t += 1) {
-    area = computeArea(points);
-    Point topLeft = area[0];
-    Point bottomRight = area[1];
+    List<Point> area = computeArea(points);
+    Point topLeft = area[0], bottomRight = area[1];
 
     int width = bottomRight.x - topLeft.x;
     int height = bottomRight.y - topLeft.y;
@@ -40,20 +30,17 @@ void solve(List<String> input) {
     move(points, 1);
   }
 
-  // Restart the simulation
-  points = [];
-  for (String line in input) {
-    if (line.isNotEmpty) {
-      points.add(Point.parse(line));
-    }
-  }
-  // This time, print the image when time is close to minAreaTime
-  int numOfPrints = 3;
-  int t = minAreaTime! - (numOfPrints - 1) ~/ 2;
+  // Print out the image when time is close to minAreaTime
+  printImage(input, minAreaTime!, 5);
+}
+
+void printImage(List<String> input, int minAreaTime, int numOfPrints) {
+  List<Point> points = parsePoints(input);
+  int t = minAreaTime - (numOfPrints - 1) ~/ 2;
   move(points, t);
 
   for (int i = 0; i < numOfPrints; i++) {
-    area = computeArea(points);
+    List<Point> area = computeArea(points);
     print('After ${t + i} seconds:');
     print(computeImage(points, area[0], area[1]).join('\n'));
     print('');
@@ -104,6 +91,16 @@ List<Point> computeArea(List<Point> points) {
     Point(minX, minY, 0, 0),
     Point(maxX, maxY, 0, 0),
   ];
+}
+
+List<Point> parsePoints(List<String> input) {
+  List<Point> points = [];
+  for (String line in input) {
+    if (line.isNotEmpty) {
+      points.add(Point.parse(line));
+    }
+  }
+  return points;
 }
 
 class Point {
