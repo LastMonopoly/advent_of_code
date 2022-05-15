@@ -12,15 +12,12 @@
 
 ## Project structure
 
-- Source code can be found under `/bin` folder
+- Solution code can be found under `/bin` folder
 - Unit test can be found under `/test` folder
 
 ## About Flutter and Dart
 
-Dart to Flutter is like Kotlin to Android.
-
-Flutter can be integrated into existing android projects without hassle.
-
-Flutter allows the development of rich user experience fast & performant.
-
+- Dart to Flutter is like Kotlin to Android
+- Flutter can be integrated into existing android projects without hassle
+- Flutter allows the development of rich user experience fast & performant
 - [Integrate a Flutter module into your Android project](https://docs.flutter.dev/development/add-to-app/android/project-setup)
